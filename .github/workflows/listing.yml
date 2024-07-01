@@ -1,0 +1,35 @@
+name: Listing
+
+on: 
+  workflow_dispatch:
+
+env:
+  repos: |
+    koorimizuw/YamaPlayer
+    koorimizuw/YamachanWebUnit
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    
+      - name: Checkout
+        uses: actions/checkout@v3
+    
+      - name: Generate index.json
+        uses: koyashiro/vpm-repos-gen-action@v0.1.0
+        with:
+          name: kwxxw
+          id: net.kwxxw.vpm
+          author: kwxxw
+          url: https://vpm.kwxxw.net/index.json
+          repos: ${{ env.repos }}
+          output: index.json
+
+      - name: Commit & Push changes
+        uses: actions-js/push@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
