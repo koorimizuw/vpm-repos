@@ -4,36 +4,61 @@ on:
   repository_dispatch:
     types: [build-listing]
   workflow_dispatch:
-
-env:
-  repos: |
-    koorimizuw/YamaPlayer
-    koorimizuw/YamachanWebUnit
+  push:
+    branches: master
+    paths: source.json
 
 permissions:
-  contents: write
+  contents: read
   pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+  
+env:
+  listPublishDirectory: Website
+  pathToCi: ci
 
 jobs:
+  
   build-listing:
     name: build-listing
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-    
-      - name: Generate index.json
-        uses: koyashiro/vpm-repos-gen-action@v0.1.0
+      
+      - uses: actions/checkout@v3 # check out this repo
+      - uses: actions/checkout@v3 # check out automation repo
         with:
-          name: kwxxw
-          id: net.kwxxw.vpm
-          author: kwxxw
-          url: https://vpm.kwxxw.net/index.json
-          repos: ${{ env.repos }}
-          output: index.json
-
-      - name: Commit & Push changes
-        uses: actions-js/push@master
+          repository: vrchat-community/package-list-action
+          path: ${{env.pathToCi}}
+          clean: false # otherwise the local repo will no longer be checked out
+          
+      - name: Restore Cache
+        uses: actions/cache@v3
         with:
-          branch: master
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          path: |
+            ${{env.pathToCi}}/.nuke/temp
+            ~/.nuget/packages
+          key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj') }}
+          
+      - name: Build Package Version Listing
+        run: ${{env.pathToCi}}/build.cmd BuildMultiPackageListing --root ${{env.pathToCi}} --list-publish-directory $GITHUB_WORKSPACE/${{env.listPublishDirectory}}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+ 
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+        
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: ${{env.listPublishDirectory}}
+          
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
