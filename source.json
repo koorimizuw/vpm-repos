@@ -13,6 +13,7 @@
     },
     "bannerUrl": "banner.png",
     "githubRepos": [
+        "koorimizuw/VRCHandMenu",
         "koorimizuw/YamaPlayer",
         "koorimizuw/YamachanWebUnit"
     ],
