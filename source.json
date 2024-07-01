@@ -1,28 +1,20 @@
 {
-    "name":"Example Listing",
-    "id":"com.vrchat.example-listing",
-    "url":"https://vrchat-community.github.io/template-package-listing/index.json",
-    "author":{
-        "email":"developer@vrchat.com",
-        "name":"VRChat",
-        "url":"https://hello.vrchat.com"
+    "name": "Yamadev packages",
+    "id": "net.kwxxw.vpm",
+    "url": "https://vpm.kwxxw.net/index.json",
+    "author": {
+        "name": "やま@kwxxw",
+        "url": "https://yamadev.booth.pm"
     },
-    "description":"Example listing of VRChat packages",
-    "infoLink":{
-        "url":"http://github.com/vrchat-community/template-package-listing",
-        "text":"View on GitHub"
+    "description": "Yamadev packages",
+    "infoLink": {
+        "url": "https://github.com/koorimizuw",
+        "text": "View on GitHub"
     },
-    "bannerUrl":"banner.png",
-    "githubRepos":[
-        "vrchat-community/clientsim"
+    "bannerUrl": "banner.png",
+    "githubRepos": [
+        "koorimizuw/YamaPlayer",
+        "koorimizuw/YamachanWebUnit"
     ],
-    "packages":[
-        {
-            "name":"com.vrchat.udonsharp",
-            "releases":[
-                "https://github.com/vrchat-community/UdonSharp/releases/download/1.1.7/com.vrchat.UdonSharp.zip",
-                "https://github.com/vrchat-community/UdonSharp/releases/download/1.1.6/com.vrchat.UdonSharp-1.1.6.zip"
-            ]
-        }
-    ]
+    "packages": []
 }
