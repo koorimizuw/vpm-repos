@@ -18,7 +18,7 @@ concurrency:
   cancel-in-progress: true
   
 env:
-  listPublishDirectory: public
+  listPublishDirectory: Website
   pathToCi: ci
 
 jobs:
@@ -46,14 +46,15 @@ jobs:
             ~/.nuget/packages
           key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj') }}
 
-      - name: Create Publish Directory
-        run: |
-          mkdir ${{env.listPublishDirectory}}
-
       - name: Build Package Version Listing
         run: ${{env.pathToCi}}/build.cmd BuildMultiPackageListing --root ${{env.pathToCi}} --list-publish-directory $GITHUB_WORKSPACE/${{env.listPublishDirectory}}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Publish Directory
+        run: |
+          mkdir public
+          mv $GITHUB_WORKSPACE/${{env.listPublishDirectory}}/index.json ./public/index.json
 
       - name: Set up Node
         uses: actions/setup-node@v4
