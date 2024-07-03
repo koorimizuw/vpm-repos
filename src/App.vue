@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Package from "./components/Package.vue"
 import axios from "axios";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch, watchEffect } from "vue";
 
 const packagesInfo = ref<any>({});
 const getPackagesInfo = async () => {
@@ -10,15 +10,19 @@ const getPackagesInfo = async () => {
 }
 
 const keyword = ref("")
-const search = () => {
-  if (Object.values(packagesInfo.value).length === 0) return [];
-  const packages = Object.values(packagesInfo.value.packages);
-  if (keyword.value === "") return packages;
-  return packages.filter((item: any) => {
+const results = ref<any[]>([])
+watchEffect(() => {
+  if (Object.values(packagesInfo.value).length === 0) {
+    results.value = [];
+    return;
+  }
+  const packages = Object.values(packagesInfo.value.packages) as any[];
+  if (keyword.value === "") results.value = packages;
+  results.value = packages.filter((item: any) => {
     const versions = Object.values(item.versions) as any;
     return versions[0]?.displayName?.toLowerCase().includes(keyword.value.toLowerCase());
   })
-};
+})
 
 onMounted(async () => {
   await getPackagesInfo();
@@ -30,8 +34,8 @@ onMounted(async () => {
     <h1 class="title">Yamadev vpm packages</h1>
     <v-text-field v-model="keyword" label="Search packages..."></v-text-field>
     <ul>
-      <Package v-for="(packageInfo, i) in search()" :key="i" :packageInfo="packageInfo as any"
-        :url="packagesInfo.url" />
+      <Package v-for="packageInfo in results" :key="(Object.values(packageInfo.versions)[0] as any)?.displayName"
+        :packageInfo="packageInfo" :url="packagesInfo.url" />
     </ul>
   </div>
 
