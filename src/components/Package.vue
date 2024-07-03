@@ -27,7 +27,7 @@ const addVCC = () => {
 }
 const openGithub = () => {
   const repo = source.githubRepos.filter(i => i.includes(name.value))[0];
-  open(`https://github.com/${repo}`, "_blank");
+  if (repo) open(`https://github.com/${repo}`, "_blank");
 }
 </script>
 
