@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Package from "./components/Package.vue"
 import axios from "axios";
-import { onMounted, ref, watch, watchEffect } from "vue";
+import { onMounted, ref, watchEffect } from "vue";
 
 const packagesInfo = ref<any>({});
 const getPackagesInfo = async () => {
