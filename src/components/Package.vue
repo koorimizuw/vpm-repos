@@ -22,12 +22,10 @@ const props = defineProps<{
 
 const name = ref(Object.values(props.packageInfo.versions)[0]?.displayName)
 const description = ref(Object.values(props.packageInfo.versions)[0]?.description)
-const addVCC = () => {
-  open(`vcc://vpm/addRepo?url=${props.url}`, "_self");
-}
-const openGithub = () => {
+
+const getGitHubUrl = () => {
   const repo = source.githubRepos.filter(i => i.includes(name.value))[0];
-  if (repo) open(`https://github.com/${repo}`, "_blank");
+  return repo ? `https://github.com/${repo}` : "";
 }
 </script>
 
@@ -38,8 +36,8 @@ const openGithub = () => {
       <div class="description">{{ description }}</div>
     </div>
     <div class="right">
-      <v-btn variant="plain" @click="openGithub">View on Github</v-btn>
-      <v-btn variant="plain" @click="addVCC">Add to VCC</v-btn>
+      <v-btn variant="plain" :href="getGitHubUrl()" target="_blank">View on Github</v-btn>
+      <v-btn variant="plain" :href="`vcc://vpm/addRepo?url=${props.url}`">Add to VCC</v-btn>
     </div>
   </li>
 </template>
